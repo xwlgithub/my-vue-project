@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './css/global.css'
 // 配置全局请求头
 const  instance=axios.create({
-  baseURL:'http://localhost:8080'
+  baseURL:'http://localhost:8111'
 })
 Vue.prototype.$http=instance
 Vue.mixin({
