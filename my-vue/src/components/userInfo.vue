@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 2px">
-      <el-button  size="small" slot="append"  type="info">新增用户</el-button>
+      <el-button  size="small" slot="append"   type="info">新增用户</el-button>
       <el-input
         style="width: 200px;margin-left: 10px"
         placeholder="请输入用户名检索"
@@ -23,11 +23,6 @@
       <el-table-column
         prop="name"
         label="用户名"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="password"
-        label="密码"
         width="180">
       </el-table-column>
       <el-table-column
@@ -72,17 +67,30 @@
           size:'10',
           tableData:[],
           totals:0,
-          input:''
+          input:'',
+          UserInfo:{
+            id:'',
+            name:'',
+            callNum:'',
+            remark:'',
+            roleId:''
+          }
         }
       },
       methods: {
+          /*分页查询*/
         findDataList(){
-          this.$get("userList/findUserList?current="+this.current+"&size="+this.size+"")
+          this.$get("other-server/userList/findUserList?current="+this.current+"&size="+this.size+"")
             .then(res =>{
               this.totals=res.data.total
               this.tableData=res.data.seconds
+              this.$success("查询成功")
             })
         },
+        /*新增*/
+        // addUser(){
+        //   this.$post("other-server/userList/saveUser")
+        // },
         indexMethod(index){
           return index==0?1:index+1
         },
