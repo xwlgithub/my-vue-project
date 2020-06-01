@@ -55,7 +55,7 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main style="padding: 0px">
+      <el-main style="padding: 5px">
         <!--面包屑-->
         <el-breadcrumb class="el-bread" separator-class="el-icon-wind-power">
           <!--导航栏-->
@@ -135,6 +135,7 @@
     background-color: slategray;
     line-height: 45px;
     padding-left: 3px;
+    border-radius: 2%;
   }
 
   .hl-container {
