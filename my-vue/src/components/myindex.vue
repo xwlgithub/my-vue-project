@@ -1,8 +1,9 @@
 <template>
 
-  <el-container class="hl-container">
+  <el-container  class="hl-container">
     <!--头部区域-->
-    <el-header>
+    <!--TODO 内容区设置宽撑起整个界面 避免整个界面滚动-->
+    <el-header style="width: 100%">
       <div style="display: flex;align-items: center">
         <!--<img style="width: 74px;height: 37px" src="../image/logo.png"/>-->
         <span style="margin-left: 15px">后台管理系统</span>
@@ -13,7 +14,7 @@
     </el-header>
     <el-container>
       <!--侧边栏-->
-      <el-aside :width="isCollapse ?'64px':'200px'">
+      <el-aside :width="isCollapse ?'64px':'200px'" >
         <div class="toggle-button" @click="toggleClick"><i :class="iconColor"></i></div>
         <el-menu
           background-color="#545c64"
