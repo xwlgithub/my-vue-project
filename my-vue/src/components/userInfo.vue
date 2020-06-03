@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%;height:800px">
+  <div >
     <div style="margin-bottom: 2px">
       <el-button  size="small" slot="append"  type="info" @click="showAddDiaLog" >新增用户</el-button>
       <el-input
@@ -11,53 +11,53 @@
       <el-button style="margin-left: 10px" type="info" size="small" slot="append"   icon="el-icon-search" @click="queryUserByName">查询</el-button>
     </div>
     <el-table
-      :data="tableData"
-      border
-      style="width: 100%"
-      >
-      <el-table-column
-        type="index"
-        :index="indexMethod"
-        label="序号"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="用户名"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="emailAddress"
-        label="邮箱">
-      </el-table-column>
-      <el-table-column
-        prop="remark"
-        label="备注">
-      </el-table-column>
-      <el-table-column
-        prop="roleId"
-        label="角色id">
-      </el-table-column>
-      <el-table-column
-        sortable
-        prop="createTime"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini" type="success"
-            @click="showUserDetails(scope.row)">详情</el-button>
-          <el-button
-            size="mini" type="primary"
-            @click="updateUserById(scope.row)">编辑</el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="deleteUserById(scope.row.id)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    :data="tableData"
+    border
+    style="width: 100%"
+  >
+    <el-table-column
+      type="index"
+      :index="indexMethod"
+      label="序号"
+    >
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="用户名"
+      width="180">
+    </el-table-column>
+    <el-table-column
+      prop="emailAddress"
+      label="邮箱">
+    </el-table-column>
+    <el-table-column
+      prop="remark"
+      label="备注">
+    </el-table-column>
+    <el-table-column
+      prop="roleName"
+      label="角色">
+    </el-table-column>
+    <el-table-column
+      sortable
+      prop="createTime"
+      label="创建时间">
+    </el-table-column>
+    <el-table-column label="操作">
+      <template slot-scope="scope">
+        <el-button
+          size="mini" type="success"
+          @click="showUserDetails(scope.row)">详情</el-button>
+        <el-button
+          size="mini" type="primary"
+          @click="updateUserById(scope.row)">编辑</el-button>
+        <el-button
+          size="mini"
+          type="danger"
+          @click="deleteUserById(scope.row.id)">删除</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
     <div style=";text-align: right;margin-top: 20px">
       <el-pagination
         @size-change="getPageSize"
@@ -74,16 +74,23 @@
       <el-dialog  :title="isAddOrUpdateOrDetails" :visible.sync="dialogFormVisible">
         <el-form :model="UserInfo">
           <el-form-item label="用户名" >
-            <el-input v-model="UserInfo.name" autocomplete="off"></el-input>
+            <el-input :disabled="isDisable" v-model="UserInfo.name" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="邮箱" >
-            <el-input v-model="UserInfo.emailAddress" autocomplete="off"></el-input>
+            <el-input :disabled="isDisable" v-model="UserInfo.emailAddress" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="备注" >
-            <el-input v-model="UserInfo.remark" autocomplete="off"></el-input>
+            <el-input :disabled="isDisable" v-model="UserInfo.remark" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="所属角色" >
-            <el-input v-model="UserInfo.roleId" autocomplete="off"></el-input>
+            <el-select v-model="value" placeholder="请分配角色">
+              <el-option
+                v-for="item in roleNames"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -113,6 +120,9 @@
             remark:'',
             roleId:''
           },
+          roleNames:[],
+          value:'',
+          isDisable:false,
           dialogFormVisible:false
         }
       },
@@ -128,6 +138,12 @@
         },
         /*打开新增窗口*/
         showAddDiaLog(){
+          //获取角色下拉
+          this.$get("other-server/roleList/findRoleLists").then(res =>{
+            this.roleNames=res.data.data
+            console.log(this.roleNames)
+          })
+          this.isDisable=false
           this.isAddOrUpdateOrDetails='新增'
           // 清空缓存区
           this.UserInfo={
@@ -141,6 +157,10 @@
         },
         /*添加*/
         userAdd(){
+          if (this.isDisable){
+            return
+          }
+          this.UserInfo.roleId=this.value
           this.$post("other-server/userList/saveUserByParams",{
            userJson:this.UserInfo
           }).then(res =>{
@@ -157,12 +177,14 @@
         },
         /*详情*/
         showUserDetails(detals){
+          this.isDisable=true
           this.isAddOrUpdateOrDetails='详情'
           this.UserInfo=detals
           this.dialogFormVisible=true;
         },
         /*修改*/
         updateUserById(detals){
+          this.isDisable=false
           this.isAddOrUpdateOrDetails='修改'
           //赋值
           this.UserInfo.id=detals.id;
