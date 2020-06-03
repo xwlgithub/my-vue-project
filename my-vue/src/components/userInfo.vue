@@ -121,8 +121,8 @@
         findDataList(){
           this.$get("other-server/userList/findUserList?current="+this.current+"&size="+this.size+"&userName="+this.input+"")
             .then(res =>{
-              this.totals=res.data.total
-              this.tableData=res.data.seconds
+              this.totals=res.data.data.total
+              this.tableData=res.data.data.seconds
               this.$success("查询成功")
             })
         },
@@ -144,9 +144,15 @@
           this.$post("other-server/userList/saveUserByParams",{
            userJson:this.UserInfo
           }).then(res =>{
-            console.log(res.data)
+            console.log(res.data.success)
+            if (res.data.success){
+              this.$success("操作成功");
+            }else {
+              this.$fail("操作失败");
+            }
           })
           this.dialogFormVisible=false
+          this.current=1
           this.findDataList()
         },
         /*详情*/
@@ -170,10 +176,10 @@
           this.$post("other-server/userList/deleteUserById/" + id + "")
             .then(res =>{
               let ret=res.data;
-              if (ret.success !=null) {
-                this.$success(ret.success)
+              if (ret.success){
+                this.$success("删除成功");
               }else {
-                this.$fail(ret.success)
+                this.$fail("删除失败");
               }
               this.findDataList();
             })
