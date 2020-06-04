@@ -49,7 +49,7 @@
               <el-menu-item index="2-3" route="/permiss">
                 <template slot="title">
                   <i class="el-icon-notebook-1"></i>
-                  <span>权限管理</span>
+                  <span>菜单管理</span>
                 </template>
               </el-menu-item>
             </el-menu-item-group>

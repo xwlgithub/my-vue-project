@@ -158,6 +158,7 @@
         },
         /*添加*/
         userAdd(){
+          this.value=null
           if (this.isDisable){
             return
           }
