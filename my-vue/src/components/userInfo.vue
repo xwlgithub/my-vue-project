@@ -83,7 +83,7 @@
             <el-input :disabled="isDisable" v-model="UserInfo.remark" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="所属角色" >
-            <el-select v-model="value" placeholder="请分配角色">
+            <el-select  v-model="value" :disabled="isDisable" clearable  placeholder="请分配角色">
               <el-option
                 v-for="item in roleNames"
                 :key="item.id"
@@ -138,6 +138,7 @@
         },
         /*打开新增窗口*/
         showAddDiaLog(){
+          this.value=''
           //获取角色下拉
           this.$get("other-server/roleList/findRoleLists").then(res =>{
             this.roleNames=res.data.data
@@ -180,10 +181,16 @@
           this.isDisable=true
           this.isAddOrUpdateOrDetails='详情'
           this.UserInfo=detals
+          this.value=detals.roleName
           this.dialogFormVisible=true;
         },
         /*修改*/
         updateUserById(detals){
+          this.$get("other-server/roleList/findRoleLists").then(res =>{
+            this.roleNames=res.data.data
+            console.log(this.roleNames)
+          })
+          this.isDisable=false
           this.isDisable=false
           this.isAddOrUpdateOrDetails='修改'
           //赋值
@@ -191,6 +198,7 @@
           this.UserInfo.name=detals.name;
           this.UserInfo.remark=detals.remark;
           this.UserInfo.roleId=detals.roleId;
+           this.value=detals.roleName;
           this.UserInfo.emailAddress=detals.emailAddress;
           this.dialogFormVisible=true;
         },
