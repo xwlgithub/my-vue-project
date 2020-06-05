@@ -1,97 +1,87 @@
 <template>
-<div>
-  <el-collapse   accordion>
-    <el-collapse-item  v-for="(item,index) in meanList" :key="index"   :title="item.menuName" >
-      <div>
-        <el-table
-        :data="item.permissionInfoList"
-        border
-        style="width: 100%">
-        <el-table-column
-        prop="menuName"
+  <div>
+    <el-button style="margin-bottom: 5px"  size="small" slot="append" type="primary"   >新增</el-button>
+    <!--默认展开default-expand-all-->
+    <el-table :highlight-current-row="true"
+      :data="tableData"
+      style="width: 100%;margin-bottom: 20px;"
+      row-key="id"
+      border
+      :tree-props="{children: 'permissionInfoList', hasChildren: 'hasChildren'}"
+    >
+      <el-table-column
+        type="index"
+        :index="indexMethod"
+      >
+      </el-table-column>
+      <el-table-column
         label="菜单名称"
-        width="180">
-        </el-table-column>
-        <el-table-column
-        prop="menuCode"
+        prop="menuName">
+      </el-table-column>
+      <el-table-column
         label="菜单编号"
-        width="180">
-        </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button
-                size="mini" type="warning" @click="openMenuPointShow(scope.row.id)">菜单按钮查看</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-collapse-item>
-  </el-collapse>
-    <el-drawer
-      title="我嵌套了表格!"
-      :visible.sync="isOpenPoints"
-      direction="rtl"
-      size="50%">
-      <el-table :data="gridData">
-        <el-table-column property="date" label="日期" width="150"></el-table-column>
-        <el-table-column property="name" label="姓名" width="200"></el-table-column>
-        <el-table-column property="address" label="地址"></el-table-column>
-      </el-table>
-    </el-drawer>
-</div>
+        prop="menuCode">
+      </el-table-column>
+      <el-table-column
+        label="菜单路径"
+        prop="menuPath">
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-link type="primary" :underline="false" @click="showDetails(scope.row)"><i class="el-icon-view el-icon--right"></i>详情</el-link>
+          <el-link type="primary" :underline="false" @click="showDetails(scope.row)"><i class="el-icon-edit"></i>编辑</el-link>
+          <el-link type="primary" :underline="false" @click="showDetails(scope.row)"><i class="el-icon-delete"></i>删除</el-link>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "permiss",
-      data(){
-        return {
-          meanList:[],
-          isOpenPoints:false,
-          gridData: [{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }, {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          }],
+  export default {
+    name: "permiss",
+    data() {
+      return {
+        tableData: []
         }
+    },
+    methods: {
+      showDetails(row){
+        console.log(row.id)
+        alert(row.toString())
       },
-      methods:{
-        openMenuPointShow(id){
-          this.$get("other-server/peron/findPointByMenuId/"+id+"").then(res=>{
-            console
-              .log(res.data)
+      /*分页查询*/
+      findDataList() {
+        this.$get("other-server/peron/menuList")
+          .then(res => {
+            this.tableData=res.data.data
+            console.log(this.tableData)
+            this.$success("查询成功")
           })
-          //查看当前菜单所属按钮详情集合
-          this.isOpenPoints=true
-        },
-        /*分页查询*/
-        findDataList(){
-          this.$get("other-server/peron/menuList")
-            .then(res =>{
-              this.meanList=res.data.data
-              console.log(this.meanList)
-              this.$success("查询成功")
-            })
-        },
       },
-      mounted(){
-          this.findDataList();
-      }
+      indexMethod(index) {
+        return index == 0 ? 1 : index + 1
+      },
+    },
+    mounted() {
+      this.findDataList();
     }
+  }
 </script>
 
 <style scoped>
+  .demo-table-expand {
+    font-size: 0;
+  }
 
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
 </style>

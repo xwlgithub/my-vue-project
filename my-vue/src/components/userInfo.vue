@@ -158,7 +158,7 @@
         },
         /*添加*/
         userAdd(){
-          this.value=null
+          //this.value=null
           if (this.isDisable){
             return
           }
@@ -192,7 +192,6 @@
             console.log(this.roleNames)
           })
           this.isDisable=false
-          this.isDisable=false
           this.isAddOrUpdateOrDetails='修改'
           //赋值
           this.UserInfo.id=detals.id;
@@ -201,6 +200,7 @@
           this.UserInfo.roleId=detals.roleId;
            this.value=detals.roleName;
           this.UserInfo.emailAddress=detals.emailAddress;
+          console.log(this.UserInfo)
           this.dialogFormVisible=true;
         },
         deleteUserById(id) {
