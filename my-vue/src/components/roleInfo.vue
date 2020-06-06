@@ -8,7 +8,9 @@
         v-model="input"
         clearable>
       </el-input>
-      <el-button style="margin-left: 10px" type="info" size="small" slot="append" icon="el-icon-search" @click="showDataList">查询</el-button>
+      <el-button style="margin-left: 10px" type="info" size="small" slot="append" icon="el-icon-search"
+                 @click="showDataList">查询
+      </el-button>
     </div>
     <el-table
       :data="tableData"
@@ -26,7 +28,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
-            size="mini" type="warning"
+            size="mini" type="warning" @click="showDisTree(scope.row.id)"
           >分配权限
           </el-button>
           <el-button
@@ -39,7 +41,7 @@
           </el-button>
           <el-button
             size="mini"
-            type="danger"  @click="deleteRoleById(scope.row.id)"
+            type="danger" @click="deleteRoleById(scope.row.id)"
           >删除
           </el-button>
         </template>
@@ -73,7 +75,28 @@
         </div>
       </el-dialog>
     </div>
+    <el-dialog
+      title="分配权限"
+      :visible.sync="centerDialogVisible"
+      default-expand-all
+      width="30%"
+      center>
+      <el-tree
+        :data="treeData"
+        show-checkbox
+        node-key="id"
+        ref="tree"
+        highlight-current
+        default-expand-all
+      >
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="centerDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="submitTree">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
+
 </template>
 
 <script>
@@ -84,68 +107,118 @@
         tableData: [],
         current: 1,
         size: 10,
-        totals:0,
-        isDisable:false,
+        totals: 0,
+        isDisable: false,
         roleInfo: {
           roleName: '',
           remark: ''
         },
         input: '',
         dialogFormVisible: false,
-        isAddOrUpdateOrDetails:''
+        centerDialogVisible: false,
+        isAddOrUpdateOrDetails: '',
+        treeData: [],
+        menuTreeDataShow: [],//菜单回显列表
+        roleId:'',
+        deleteds:[]
       }
     },
     methods: {
-      updateRole(detals){
-        this.isDisable=false
-        this.isAddOrUpdateOrDetails='修改'
+      submitTree() {
+        //获取角色id
+        var roleNowId=this.roleId
+        //获得当前选中节点``  选取子节点和父节点ID放同一数组里
+        var roleIds= this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
+        var permissIds=roleIds.join(",")
+        console.log("当前选中节点"+permissIds)
+        this.deleteds=[]
+        //获取最先渲染菜单集合
+        let showIds=this.menuTreeDataShow;
+        var demo=''
+        for (let i = 0; i < showIds.length; i++) {
+          if (permissIds.indexOf(showIds[i].id)==-1){
+            demo+=showIds[i].id+',';
+            this.deleteds[i]=showIds[i].id
+          }
+        }
+        var mydeleteds=demo.substring(0,demo.length-1)
+        console.log("要删除的ID集合"+mydeleteds)
+        this.$post("other-server/roleList/saveRoleWithMenuByIds?permissIds="+permissIds+",&" +
+          "roleId="+roleNowId+"&mydeleteds="+mydeleteds+"").then(res =>{
+            if (res.data.success){
+              this.$success(res.data.message)
+            }else {
+              this.$fail(res.data.message)
+            }
+        })
+        this.centerDialogVisible = false
+      },
+      showDisTree(id) {
+        this.roleId=id
+        /*获取权限菜单树形体*/
+        this.$get("other-server/peron/treeMenus").then(res => {
+          this.treeData = res.data.data
+        })
+        /*如果当前角色存在权限信息,即回显*/
+        this.$get("other-server/roleList/findRoleMenuListById/" + id + "").then(res => {
+          this.menuTreeDataShow = res.data.data;
+          this.$refs.tree.setCheckedNodes(this.menuTreeDataShow)
+        })
+        this.centerDialogVisible = true
+      },
+      /*修改*/
+      updateRole(detals) {
+        this.isDisable = false
+        this.isAddOrUpdateOrDetails = '修改'
         //赋值
-        this.roleInfo.id=detals.id;
-        this.roleInfo.roleName=detals.roleName;
-        this.roleInfo.remark=detals.remark;
-        this.dialogFormVisible=true;
+        this.roleInfo.id = detals.id;
+        this.roleInfo.roleName = detals.roleName;
+        this.roleInfo.remark = detals.remark;
+        this.dialogFormVisible = true;
       },
-      showDetails(details){
-        /*详情*/
-        this.isDisable=true
-          this.isAddOrUpdateOrDetails='详情'
-          this.roleInfo=details
-          this.dialogFormVisible=true;
+      /*详情*/
+      showDetails(details) {
+        this.isDisable = true
+        this.isAddOrUpdateOrDetails = '详情'
+        this.roleInfo = details
+        this.dialogFormVisible = true;
       },
+      /*新增窗口打开*/
       roleAddisShow() {
-        this.isDisable=false
-        this.roleInfo={
+        this.isDisable = false
+        this.roleInfo = {
           roleName: '',
           remark: ''
         }
-        this.isAddOrUpdateOrDetails="新增"
+        this.isAddOrUpdateOrDetails = "新增"
         this.dialogFormVisible = true;
       },
-      showDataList(){
+      showDataList() {
         this.findDataList()
       },
-      deleteRoleById(id){
-        this.$post("other-server/roleList/deleteRoleById/"+id+"").then(res=>{
-          let ret=res.data;
-          if (ret.success){
+      /*删除*/
+      deleteRoleById(id) {
+        this.$post("other-server/roleList/deleteRoleById/" + id + "").then(res => {
+          let ret = res.data;
+          if (ret.success) {
             this.$success("删除成功");
-          }else {
+          } else {
             this.$fail(res.message);
           }
           this.findDataList();
         })
       },
       /*分页查询*/
-      findDataList(){
-        this.$get("other-server/roleList/findRoleList?current="+this.current+"&size="+this.size+"&roleName="+this.input+"")
-          .then(res =>{
-            this.totals=res.data.data.total
-            this.tableData=res.data.data.seconds
+      findDataList() {
+        this.$get("other-server/roleList/findRoleList?current=" + this.current + "&size=" + this.size + "&roleName=" + this.input + "")
+          .then(res => {
+            this.totals = res.data.data.total
+            this.tableData = res.data.data.seconds
             this.$success("查询成功")
           })
       },
       roleAdd() {
-        if (this.isDisable){
+        if (this.isDisable) {
           return
         }
         this.$post("other-server/roleList/saveRoleByParams",
@@ -160,7 +233,7 @@
           }
         })
         this.dialogFormVisible = false
-        this.roleInfo={
+        this.roleInfo = {
           roleName: '',
           remark: ''
         }
