@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button style="margin-bottom: 5px"  size="small" slot="append" type="primary"   >新增</el-button>
+    <el-button style="margin-bottom: 5px"  size="small" slot="append" type="primary"  @click="$success('菜单业务后续扩展')" >新增</el-button>
     <!--默认展开default-expand-all-->
     <el-table :highlight-current-row="true"
       :data="tableData"
@@ -47,8 +47,7 @@
     },
     methods: {
       showDetails(row){
-        console.log(row.id)
-        alert(row.toString())
+          this.$success("菜单业务后续扩展!")
       },
       /*分页查询*/
       findDataList() {

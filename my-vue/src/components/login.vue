@@ -16,47 +16,78 @@
               <el-input v-model="from.name"></el-input>
             </el-form-item>
             <el-form-item label="密码" style="margin-top: 18px">
-              <el-input type="password" v-model="from.password"></el-input>
+              <el-input  v-model="from.password" show-password></el-input>
             </el-form-item>
             <el-form-item style="margin-top: 30px">
               <el-button class="bn" type="primary" @click="submitLogin">登录</el-button>
               <el-button class="bn" type="primary">重置</el-button>
             </el-form-item>
           </el-form>
-          <el-link style="margin-top: 20px;margin-left: 200px" type="primary">没有账号?注册</el-link>
+          <el-link style="margin-top: 20px;margin-left: 200px" type="primary" @click="showDislog">没有账号?注册</el-link>
         </div>
       </div>
     </div>
+    <div  >
+      <el-dialog  title="注册" :visible.sync="dialogFormVisible">
+        <el-form :model="userInfo">
+          <el-form-item label="用户名" >
+            <el-input v-model="userInfo.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" >
+            <el-input v-model="userInfo.password" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" >
+            <el-input v-model="userInfo.againPsd" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="resetUser">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
-<!--<div class="mylogin"  >
-    <div style=" margin: 50px 100px 100px; padding:10px;" >
-      <el-form  ref="form"  v-model="from" label-width="80px">
-        <el-form-item label="账号">
-          <el-input  style="width: 250px" v-model="from.name"></el-input>
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input type="password"  style="width: 250px" v-model="from.password"></el-input>
-        </el-form-item>
-        <el-form-item style="margin-left: 45px">
-          <el-button type="primary"  @click="submitLogin">登录</el-button>
-          <el-button type="primary">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
-  </div>-->
 <script>
   export default {
     name: "login",
     data() {
       return {
         from: {
-          name: '薛文良',
-          password: '123456'
-        }
+          name: '',
+          password: ''
+        },
+        userInfo:{
+          name: '',
+          password: '',
+          againPsd:'',
+          isReset:2
+        },
+        dialogFormVisible:false,
       }
     },
     methods: {
+      showDislog(){
+        this.userInfo={
+          name: '',
+          password: '',
+          againPsd:'',isReset:2
+        }
+        //this.userInfo=null
+        this.dialogFormVisible=true
+      },
+      resetUser(){
+        this.$post("other-server/userList/saveUserByParams",{
+          "userJson":this.userInfo
+        }).then(res=>{
+          if (res.data.success){
+            this.$success("注册成功");
+            this.dialogFormVisible=false
+          }else {
+            this.$fail(res.data.message);
+          }
+        })
+      },
       submitLogin() {
         console.log("s")
         if (!this.from.name.trim() || !this.from.password.trim()) {
@@ -67,10 +98,17 @@
             showClose: true
           })
         }
-        this.$router.push("/myindex")
-        // this.$post("/vLogin/LoginServer?name=" + this.from.name + "&password=" + this.from.password + "").then(res => {
-        //   console.log(this.from)
-        // })
+        this.$post("other-server/userList/loginServer",{
+          name:this.from.name,
+          password:this.from.password
+        }).then(res =>{
+         if (res.data.success){
+           this.$success("验证成功!")
+           this.$router.push("/myindex")
+         } else {
+           this.$fail(res.data.message)
+         }
+        })
       }
     }
 
@@ -83,18 +121,6 @@
     height: 30px;
     margin-left: 25px;
   }
-
-  .mylogin {
-    position: absolute;
-    border-radius: 5px;
-    width: 600px;
-    height: 300px;
-    border: 5px #ccc solid;
-    top: 50%;
-    left: 50%;
-    margin: -150px 0 0 -300px;
-  }
-
   * {
     font: 13px/1.5 '微软雅黑';
     -webkit-box-sizing: border-box;

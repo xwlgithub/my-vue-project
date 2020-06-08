@@ -6,7 +6,7 @@
     <el-header style="width: 100%">
       <div style="display: flex;align-items: center">
         <!--<img style="width: 74px;height: 37px" src="../image/logo.png"/>-->
-        <span style="margin-left: 15px">舒服了</span>
+        <span style="margin-left: 15px">LOGO</span>
       </div>
       <iv></iv>
 
