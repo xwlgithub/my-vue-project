@@ -49,13 +49,15 @@
   </div>
 </template>
 <script>
+  import config from "../mixin/allPram";
+
   export default {
     name: "login",
     data() {
       return {
         from: {
-          name: '',
-          password: ''
+          name: 'xwl',
+          password: '123456'
         },
         userInfo:{
           name: '',
@@ -103,8 +105,20 @@
           password:this.from.password
         }).then(res =>{
          if (res.data.success){
+
+           //存储token
+           sessionStorage.setItem(config.PARAM_KEY.access_tocken,res.data.data.access_token)
+           sessionStorage.setItem(config.PARAM_KEY.LOGIN_USER_NAME,this.from.name)
            this.$success("验证成功!")
-           this.$router.push("/myindex")
+           this.$get("other-server/userList/findAuthByToken?token="+res.data.data.access_token+"")
+             .then(res =>{
+               console.log(res.data.data)
+               //存储当前用户权限菜单
+               sessionStorage.setItem(config.PARAM_KEY.MENUS,res.data.data.menus)
+               sessionStorage.setItem(config.PARAM_KEY.BUTTONS,res.data.data.buttons)
+               //跳转主页
+               this.$router.push("/myindex")
+             })
          } else {
            this.$fail(res.data.message)
          }

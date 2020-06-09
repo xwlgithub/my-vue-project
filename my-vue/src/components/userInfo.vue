@@ -1,7 +1,7 @@
 <template>
   <div >
     <div style="margin-bottom: 2px">
-      <el-button  size="small" slot="append"  type="info" @click="showAddDiaLog" >新增用户</el-button>
+      <el-button  size="small" slot="append"  type="info" @click="showAddDiaLog" v-has="'userAdd'" >新增用户</el-button>
       <el-input
         style="width: 200px;margin-left: 10px"
         placeholder="请输入用户名检索"
@@ -47,14 +47,14 @@
       <template slot-scope="scope">
         <el-button
           size="mini" type="success"
-          @click="showUserDetails(scope.row)">详情</el-button>
+          @click="showUserDetails(scope.row)" v-has="'userDetail'">详情</el-button>
         <el-button
           size="mini" type="primary"
-          @click="updateUserById(scope.row)">编辑</el-button>
+          @click="updateUserById(scope.row)" v-has="'userUpdate'">编辑</el-button>
         <el-button
           size="mini"
           type="danger"
-          @click="deleteUserById(scope.row.id)">删除</el-button>
+          @click="deleteUserById(scope.row.id)" v-has="'userDelete'">删除</el-button>
       </template>
     </el-table-column>
   </el-table>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button style="margin-bottom: 5px"  size="small" slot="append" type="primary"  @click="$success('菜单业务后续扩展')" >新增</el-button>
+    <el-button style="margin-bottom: 5px"  size="small" slot="append" type="primary"  @click="$success('菜单业务后续扩展')" v-has="'menuAdd'" >新增</el-button>
     <!--默认展开default-expand-all-->
     <el-table :highlight-current-row="true"
       :data="tableData"
@@ -28,9 +28,9 @@
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-link type="primary" :underline="false" @click="showDetails(scope.row)"><i class="el-icon-view el-icon--right"></i>详情</el-link>
-          <el-link type="primary" :underline="false" @click="showDetails(scope.row)"><i class="el-icon-edit"></i>编辑</el-link>
-          <el-link type="primary" :underline="false" @click="showDetails(scope.row)"><i class="el-icon-delete"></i>删除</el-link>
+          <el-link v-has="'menuDetail'" type="primary" :underline="false" @click="showDetails(scope.row)"><i class="el-icon-view el-icon--right"></i>详情</el-link>
+          <el-link v-has="'menuUpdate'" type="primary" :underline="false" @click="showDetails(scope.row)"><i class="el-icon-edit"></i>编辑</el-link>
+          <el-link  v-has="'menuDelete'" type="primary" :underline="false" @click="showDetails(scope.row)"><i class="el-icon-delete"></i>删除</el-link>
         </template>
       </el-table-column>
     </el-table>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin-bottom: 2px">
-      <el-button size="small" slot="append" type="info" @click="roleAddisShow">新增角色</el-button>
+      <el-button size="small" slot="append" type="info" @click="roleAddisShow" v-has="'roleAdd'">新增角色</el-button>
       <el-input
         style="width: 200px;margin-left: 10px"
         placeholder="请输入角色名检索"
@@ -28,20 +28,20 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
-            size="mini" type="warning" @click="showDisTree(scope.row.id)"
+            size="mini" type="warning" @click="showDisTree(scope.row.id)" v-has="'roleWithMenu'"
           >分配权限
           </el-button>
           <el-button
-            size="mini" type="success" @click="showDetails(scope.row)"
+            size="mini" type="success" @click="showDetails(scope.row)" v-has="'roleDetail'"
           >详情
           </el-button>
           <el-button
-            size="mini" type="primary" @click="updateRole(scope.row)"
+            size="mini" type="primary" @click="updateRole(scope.row)" v-has="'roleUpdate'"
           >编辑
           </el-button>
           <el-button
             size="mini"
-            type="danger" @click="deleteRoleById(scope.row.id)"
+            type="danger" @click="deleteRoleById(scope.row.id)" v-has="'roleDelete'"
           >删除
           </el-button>
         </template>
@@ -130,17 +130,24 @@
         //获得当前选中节点``  选取子节点和父节点ID放同一数组里
         var roleIds= this.$refs.tree.getCheckedKeys().concat(this.$refs.tree.getHalfCheckedKeys())
         var permissIds=roleIds.join(",")
+        const contains = (() =>
+            Array.prototype.includes
+              ? (arr, value) => permissIds.includes(value)
+              : (arr, value) => permissIds.some((el => el === value))
+        )();
         console.log("当前选中节点"+permissIds)
         this.deleteds=[]
         //获取最先渲染菜单集合
         let showIds=this.menuTreeDataShow;
         var demo=''
         for (let i = 0; i < showIds.length; i++) {
-          if (permissIds.indexOf(showIds[i].id)==-1){
+          if (!contains(showIds[i].id)){
+            console.log("包含"+contains(showIds[i].id))
             demo+=showIds[i].id+',';
             this.deleteds[i]=showIds[i].id
           }
         }
+        console.log("要删除的"+demo)
         var mydeleteds=demo.substring(0,demo.length-1)
         console.log("要删除的ID集合"+mydeleteds)
         this.$post("other-server/roleList/saveRoleWithMenuByIds?permissIds="+permissIds+",&" +
@@ -159,12 +166,12 @@
         this.$get("other-server/peron/treeMenus").then(res => {
           this.treeData = res.data.data
         })
+        this.centerDialogVisible = true
         /*如果当前角色存在权限信息,即回显*/
         this.$get("other-server/roleList/findRoleMenuListById/" + id + "").then(res => {
           this.menuTreeDataShow = res.data.data;
           this.$refs.tree.setCheckedNodes(this.menuTreeDataShow)
         })
-        this.centerDialogVisible = true
       },
       /*修改*/
       updateRole(detals) {

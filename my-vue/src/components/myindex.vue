@@ -1,12 +1,11 @@
 <template>
-
   <el-container  class="hl-container">
     <!--头部区域-->
     <!--TODO 内容区设置宽撑起整个界面 避免整个界面滚动-->
     <el-header style="width: 100%">
       <div style="display: flex;align-items: center">
         <!--<img style="width: 74px;height: 37px" src="../image/logo.png"/>-->
-        <span style="margin-left: 15px">LOGO</span>
+        <span style="margin-left: 15px">{{nowUserName}}</span>
       </div>
       <iv></iv>
 
@@ -28,25 +27,25 @@
             <i class="el-icon-menu"></i>
             <span slot="title">我的首页</span>
           </el-menu-item>
-          <el-submenu index="2">
+          <el-submenu index="2" v-h="'serverMenu'">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>系统管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="2-1" route="/userInfo">
+              <el-menu-item index="2-1" route="/userInfo" v-h="'userInfoMenu'">
                 <template slot="title">
                   <i class="el-icon-user-solid"></i>
                   <span>用户管理</span>
                 </template>
               </el-menu-item>
-              <el-menu-item index="2-2" route="/roleInfo">
+              <el-menu-item index="2-2" route="/roleInfo" v-h="'roleInfoMenu'">
                 <template slot="title">
                   <i class="el-icon-s-check"></i>
                   <span>角色管理</span>
                 </template>
               </el-menu-item>
-              <el-menu-item index="2-3" route="/permiss">
+              <el-menu-item  index="2-3" route="/permiss" v-h="'menuInfoMenu'" >
                 <template slot="title">
                   <i class="el-icon-notebook-1"></i>
                   <span>菜单管理</span>
@@ -79,7 +78,7 @@
 </template>
 <script>
   import iv from '../iview/iviews'
-
+  import config from "../mixin/allPram";
   export default {
     components: {
       iv
@@ -102,6 +101,7 @@
     },
     data() {
       return {
+        nowUserName:'',
         activeName: 'webcome',
         isCollapse: false,
         iconColor: 'el-icon-c-scale-to-original',
@@ -127,6 +127,9 @@
         this.$router.push("/myindex")
       }
     },
+    created(){
+      this.nowUserName=sessionStorage.getItem(config.PARAM_KEY.LOGIN_USER_NAME)
+    }
   }
 </script>
 

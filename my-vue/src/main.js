@@ -9,6 +9,7 @@ import './css/global.css'
 Vue.config.productionTip = false
 // Vue.use(VueAxios,axios)
 Vue.use(elementUi)
+
 new Vue({
   el: '#app',
   router,
