@@ -13,13 +13,13 @@ Vue.mixin({
     $get(url, data) {
       return instance.get(url, {
         params: data
-      }).catch(err => {
-        console.log(err)
+      })
+        .catch(err => {
         if (err.message === 'Network Error') {
           this.$message({
             message: '服务器异常',
             type: 'warning',
-            duration:2000,
+            duration:1000,
             showClose:true
           });
         }
@@ -28,12 +28,11 @@ Vue.mixin({
     $post(url, data) {
       var pdd = instance.post(url, data)
       pdd.catch(err => {
-        console.log(err.message)
         if (err.message === 'Network Error') {
           this.$message({
             message: '服务器异常',
             type: 'warning',
-            duration:2000,
+            duration:1000,
             showClose:true
           });
         } else {
@@ -41,7 +40,7 @@ Vue.mixin({
             this.$message({
               message: '服务器异常',
               type: 'warning',
-              duration:2000,
+              duration:1000,
               showClose:true
             });
           }

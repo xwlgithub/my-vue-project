@@ -100,7 +100,7 @@
             showClose: true
           })
         }
-        this.$post("other-server/userList/loginServer",{
+        this.$http.post("http://localhost:5555/login/loginServers",{
           name:this.from.name,
           password:this.from.password
         }).then(res =>{

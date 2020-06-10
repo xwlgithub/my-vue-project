@@ -133,7 +133,7 @@
             .then(res =>{
               this.totals=res.data.data.total
               this.tableData=res.data.data.seconds
-              this.$success("查询成功")
+              this.$success(res.data.message)
             })
         },
         /*打开新增窗口*/
