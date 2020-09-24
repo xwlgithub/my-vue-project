@@ -1,8 +1,8 @@
 {
-  "name": "y",
+  "name": "my-vue",
   "version": "1.0.0",
-  "description": "y",
-  "author": "y",
+  "description": "A Vue.js project",
+  "author": "xwlgithub <17530235750@163.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -10,11 +10,17 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.19.2",
-    "element-ui": "^2.13.2",
-    "layui-src": "^2.5.5",
+    "@antv/g2": "^3.5.8-beta.4",
+    "axios": "^0.19.0",
+    "echarts": "^4.3.0",
+    "element-ui": "^2.12.0",
+    "node-sass": "^4.12.0",
+    "sass-loader": "^8.0.0",
+    "save": "^2.4.0",
+    "scss-loader": "0.0.1",
     "vue": "^2.5.2",
-    "vue-axios": "^2.1.5"
+    "vue-axios": "^2.1.5",
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
@@ -46,7 +52,6 @@
     "uglifyjs-webpack-plugin": "^1.1.1",
     "url-loader": "^0.5.8",
     "vue-loader": "^13.3.0",
-    "vue-router": "^3.2.0",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.6.0",
@@ -62,5 +67,15 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "main": ".postcssrc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xwlgithub/my-vue-project.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xwlgithub/my-vue-project/issues"
+  },
+  "homepage": "https://github.com/xwlgithub/my-vue-project#readme"
 }

@@ -5,6 +5,7 @@ import welcome from '../components/welcome'
 import userInfo from '../components/userInfo'
 import roleInfo from '../components/roleInfo'
 import permiss from '../components/permiss'
+import config from "../mixin/allPram";
 
 import VueRouter from 'vue-router'
 /**
@@ -56,6 +57,21 @@ const router = new VueRouter({
       ]
     }
   ]
-
+})
+/*钩子函数,如果没登录情况下返回登录界面*/
+router.beforeEach((to, from, next) => {
+  console.log("钩子函数执行")
+  /*获取路径*/
+   var info=sessionStorage.getItem(config.PARAM_KEY.LOGIN_USER_NAME)
+   if (info) {
+     next();
+   }else {
+     console.log(to.path)
+    if (to.path=='/'){
+      next();
+    }else {
+      next("/")
+    }
+   }
 })
 export default router
