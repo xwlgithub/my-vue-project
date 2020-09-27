@@ -56,8 +56,8 @@
     data() {
       return {
         from: {
-          name: '薛文良',
-          password: '123456'
+          name: '',
+          password: ''
         },
         userInfo:{
           name: '',

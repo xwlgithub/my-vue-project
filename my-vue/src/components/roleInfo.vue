@@ -257,6 +257,9 @@
     },
     created() {
       this.findDataList()
+    },
+    computed(){
+      this.findDataList()
     }
   }
 </script>

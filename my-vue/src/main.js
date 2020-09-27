@@ -6,8 +6,10 @@ import mixin from './mixin'
 import VueAxios from 'vue-axios'
 import 'element-ui/lib/theme-chalk/index.css';
 import './css/global.css'
+import  echarts from 'echarts'
 Vue.config.productionTip = false
 Vue.use(elementUi)
+Vue.prototype.$echarts=echarts
 
 new Vue({
   el: '#app',
