@@ -5,6 +5,7 @@ import welcome from '../components/welcome'
 import userInfo from '../components/userInfo'
 import roleInfo from '../components/roleInfo'
 import permiss from '../components/permiss'
+import threeLetter from '../components/threeLetter'
 import config from "../mixin/allPram";
 
 import VueRouter from 'vue-router'
@@ -52,6 +53,12 @@ const router = new VueRouter({
           component: permiss,
           meta:{
             title:'权限管理'
+          }
+        },{
+          path: '/threeLetter',
+          component: threeLetter,
+          meta:{
+            title:'三字母管理'
           }
         },
       ]

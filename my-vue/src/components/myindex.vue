@@ -53,6 +53,20 @@
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
+          <el-submenu index="3" v-h="'lsps'">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>LSP</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="3-1" route="/threeLetter" v-h="'threeLetter'">
+                <template slot="title">
+                  <i class="el-icon-user-solid"></i>
+                  <span>三字母管理</span>
+                </template>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main style="padding: 5px">

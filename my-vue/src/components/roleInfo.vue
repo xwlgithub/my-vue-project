@@ -158,6 +158,7 @@
               this.$fail(res.data.message)
             }
         })
+        this.menuTreeDataShow=[];
         this.centerDialogVisible = false
       },
       showDisTree(id) {
@@ -170,6 +171,7 @@
         /*如果当前角色存在权限信息,即回显*/
         this.$get("other-server/roleList/findRoleMenuListById/" + id + "").then(res => {
           this.menuTreeDataShow = res.data.data;
+          console.log(this.menuTreeDataShow+"回显菜单")
           this.$refs.tree.setCheckedNodes(this.menuTreeDataShow)
         })
       },
