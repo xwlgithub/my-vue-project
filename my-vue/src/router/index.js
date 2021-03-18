@@ -70,6 +70,7 @@ router.beforeEach((to, from, next) => {
   console.log("钩子函数执行")
   /*获取路径*/
    var info=sessionStorage.getItem(config.PARAM_KEY.LOGIN_USER_NAME)
+  console.log("获取当前登录名称"+info)
    if (info) {
      next();
    }else {

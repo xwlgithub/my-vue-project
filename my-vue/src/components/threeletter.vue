@@ -51,7 +51,7 @@
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.isHavePicture === 1 ? 'danger' : 'info'"
-            disable-transitions>{{scope.row.isHavePicture===1?'偷拍':'不偷怕'}}</el-tag>
+            disable-transitions>{{scope.row.isHavePicture===1?'偷拍':'不偷拍'}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -149,8 +149,8 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="偷怕">
-            <el-select size="medium"  v-model="isHavePictureValue" :disabled="isDisable" clearable  placeholder="是否偷怕">
+          <el-form-item label="偷拍">
+            <el-select size="medium"  v-model="isHavePictureValue" :disabled="isDisable" clearable  placeholder="是否偷拍">
             <el-option
               v-for="item in isHaveNarcissisticss"
               :key="item.id"
@@ -296,12 +296,13 @@
         this.lspInfo.isHaveNarcissistic=this.isHaveNarcissisticsValue
         this.$post("/show-server/saveOrUpdate",{lspWx:this.lspInfo})
           .then(res=>{
-            this.$success("操作成功")
+            if (!res.data.success){
+              this.$fail(res.data.message)
+            }
           })
-        this.findLspList();
-        this.findLspList();
-        this.$success("操作成功")
         this.dialogFormVisible=false
+        //回调查询接口更新列表
+        this.findLspList();
       },
       /*查询接口*/
       findLspList() {
@@ -310,7 +311,7 @@
             console.log(res.data.data)
             this.totals=res.data.data.total
             this.tableData=res.data.data.seconds
-            // this.$success(res.data.message)
+            this.$success(res.data.message)
           })
       },
       /*删除*/
