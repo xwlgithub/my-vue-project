@@ -3,6 +3,13 @@
     <div style="margin-bottom: 2px">
       <el-button size="small" slot="append" type="success" @click="showAddlsp" v-has="'threeAddlsp'">新增三字母</el-button>
     </div>
+    <div>
+      <el-input style="width: 200px;line-height: 20px;padding: 2px"
+                placeholder="请输入内容"
+                v-model="put"
+                clearable>
+      </el-input><el-button type="primary" icon="el-icon-search" @click="findLspList">搜索</el-button>
+    </div>
     <el-table
       ref="filterTable"
       :data="tableData"
@@ -294,8 +301,9 @@
         this.lspInfo.sex=this.sexs
         this.lspInfo.isHavePicture=this.isHavePictureValue
         this.lspInfo.isHaveNarcissistic=this.isHaveNarcissisticsValue
-        this.$post("/show-server/saveOrUpdate",{lspWx:this.lspInfo})
+        this.$post("/show-server/saveOrUpdate",this.lspInfo)
           .then(res=>{
+            console.log(res.data.success+"打印")
             if (!res.data.success){
               this.$fail(res.data.message)
             }
@@ -316,7 +324,13 @@
       },
       /*删除*/
       deleteLspById(id) {
-        this.$success("成功");
+        this.$post("/show-server/deleteById/"+id+"").then(res=>{
+          console.log(res.data.data)
+          if (res.data.data){
+            this.$success("删除成功")
+            this.findLspList()
+          }
+        })
       },
       getPageSize(paegSize) {
         this.size = paegSize;
@@ -330,9 +344,9 @@
         return index == 0 ? 1 : index + 1
       },
     },
-    created(){
-      this.findLspList();
-    },
+    // created(){
+    //   this.findLspList();
+    // },
     mounted(){
       this.findLspList();
     }
